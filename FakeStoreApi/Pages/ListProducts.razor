@@ -1,0 +1,44 @@
+﻿@page "/listProducts"
+
+@using FakeStoreApi.Models
+@using FakeStoreApi.Services
+@* inyectar servicio *@
+@inject IProductService service 
+
+<h3>Products</h3>
+
+<div class="container">
+    @if(_products != null)
+    {
+        <div class="row">
+            @foreach (var product in _products)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="@product.images.FirstOrDefault()" class="card-img-top" alt="@product.title">
+                        <div class="card-body">
+                            <h5 class="card-title">@product.title</h5>
+                            <p class="card-text">Price: $@product.price</p>
+                            <p class="card-text">@product.description</p>
+                            <p class="card-text">Category: @product.category.name</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Cargando...</p>
+    }
+    
+</div>
+
+@code {
+    private List<Products> _products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _products = await service.GetAllProducts();
+    }
+}
